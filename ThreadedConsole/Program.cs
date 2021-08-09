@@ -66,10 +66,11 @@ namespace ThreadedConsole
         }
 
         static void RunThreadPoolTest(List<List<CSVRecord>> values){
+            //https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool.queueuserworkitem?view=net-5.0
             Console.WriteLine("Thread Pool Test");
 
             for(int i = 0; i < values.Count; i++){
-                ThreadPool.QueueUserWorkItem(ThreadProc);
+                ThreadPool.QueueUserWorkItem(ThreadProc, i);
                 //Console.WriteLine("Main thread does some work, then sleeps.");
             }
         }
@@ -77,10 +78,11 @@ namespace ThreadedConsole
         // This thread procedure performs the task.
         static void ThreadProc(Object stateInfo) 
         {
+            int threadIndex = (int)stateInfo;
             // No state object was passed to QueueUserWorkItem, so stateInfo is null.
             var rand = new Random();
             Thread.Sleep(rand.Next(1, 10) * 100);
-            Console.WriteLine("Hello from the thread pool.");
+            Console.WriteLine($"Hello from the thread pool on record {threadIndex}");
         }
 
         /// <summary>
