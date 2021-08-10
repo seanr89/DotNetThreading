@@ -30,7 +30,7 @@ namespace ThreadedConsole
                                         .ToList();
 
             Console.WriteLine("Loaded {0} records", values.Count);
-            
+
             var splitRecords = HelperMethods.SplitList(values, 500).ToList();
 
             try
@@ -55,34 +55,43 @@ namespace ThreadedConsole
             Console.WriteLine("App Completed");
         }
 
-        void RunThreadTest(){
+        void RunThreadTest()
+        {
             Thread th = Thread.CurrentThread;
             th.Name = "MainThread";
-            
+
             Console.WriteLine("This is {0}", th.Name);
             Console.ReadKey();
 
             //
         }
 
-        static void RunThreadPoolTest(List<List<CSVRecord>> values){
+        static void RunThreadPoolTest(List<List<CSVRecord>> values)
+        {
+            ThreadPool.SetMinThreads(1, 1);
+            ThreadPool.SetMaxThreads(4, 4);
+            int workers, ports;
+            // Get maximum number of threads  
+            ThreadPool.GetMaxThreads(out workers, out ports);
             //https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool.queueuserworkitem?view=net-5.0
-            Console.WriteLine("Thread Pool Test");
+            Console.WriteLine($"ThreadPool Test. Count {workers}");
 
-            for(int i = 0; i < values.Count; i++){
+            for (int i = 0; i < values.Count; i++)
+            {
                 ThreadPool.QueueUserWorkItem(ThreadProc, i);
                 //Console.WriteLine("Main thread does some work, then sleeps.");
             }
         }
 
         // This thread procedure performs the task.
-        static void ThreadProc(Object stateInfo) 
+        static void ThreadProc(Object stateInfo)
         {
             int threadIndex = (int)stateInfo;
+            Console.WriteLine($"Starting Thread: {threadIndex}");
             // No state object was passed to QueueUserWorkItem, so stateInfo is null.
             var rand = new Random();
-            Thread.Sleep(rand.Next(1, 10) * 100);
-            Console.WriteLine($"Hello from the thread pool on record {threadIndex}");
+            Thread.Sleep(rand.Next(10, 50) * 10);
+            Console.WriteLine($"Completing Thread {threadIndex}");
         }
 
         /// <summary>
