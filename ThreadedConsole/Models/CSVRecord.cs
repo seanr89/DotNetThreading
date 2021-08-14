@@ -16,10 +16,10 @@ namespace ThreadedConsole.Models
         {
             string[] values = csvLine.Split(',');
             CSVRecord rec = new CSVRecord();
-                rec.OrderNumber = values[0];
-                rec.TrackingNumber = Convert.ToInt32(values[1]);
-                //rec.Courier = values[2];
-                rec.Email = values[1];
+            rec.OrderNumber = values[0];
+            rec.TrackingNumber = Convert.ToInt32(values[1]);
+            //rec.Courier = values[2];
+            rec.Email = values[2];
             return rec;
         }
     }
