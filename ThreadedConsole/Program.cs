@@ -13,10 +13,11 @@ namespace ThreadedConsole
 {
     class Program
     {
-        private static IConfigurationRoot Configuration { get; set; }
+        //private static IConfigurationRoot Configuration { get; set; }
         async static Task Main(string[] args)
         {
             Console.WriteLine("Thread Runner");
+            Console.WriteLine("==========================");
 
             //Step1. open and process the file
             string path = "/Users/Public/Downloads/mock_data.csv";
