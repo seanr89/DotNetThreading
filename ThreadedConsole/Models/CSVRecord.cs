@@ -2,7 +2,11 @@ using System;
 
 namespace ThreadedConsole.Models
 {
-    public class CSVRecord
+    /// <summary>
+    /// Demo CSV record model file
+    /// Now converted to a record!
+    /// </summary>
+    public record CSVRecord
     {
         public string OrderNumber { get; set; }
         public int TrackingNumber { get; set; }
@@ -12,6 +16,11 @@ namespace ThreadedConsole.Models
         /// </summary>
         public string FormattedTrackingNumber => TrackingNumber.ToString("D8");
 
+        /// <summary>
+        /// Statically create a CSVrecord from the incoming csvLine data
+        /// </summary>
+        /// <param name="csvLine">single CSV line record</param>
+        /// <returns>completed CSVRecord</returns>
         public static CSVRecord FromCsv(string csvLine)
         {
             string[] values = csvLine.Split(',');

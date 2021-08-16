@@ -7,20 +7,16 @@ using Utilities;
 using ThreadedConsole.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ThreadedConsole
 {
     class Program
     {
         private static IConfigurationRoot Configuration { get; set; }
-        static void Main(string[] args)
+        async static Task Main(string[] args)
         {
             Console.WriteLine("Thread Runner");
-            Configuration = LoadAppSettings();
-            var serviceCollection = new ServiceCollection();
-            RegisterAndInjectServices(serviceCollection, Configuration);
-            //Initialise netcore dependency injection provider
-            var serviceProvider = serviceCollection.BuildServiceProvider();
 
             //Step1. open and process the file
             string path = "/Users/Public/Downloads/mock_data.csv";
@@ -37,9 +33,7 @@ namespace ThreadedConsole
             {
                 using (ExecutionPerformanceMonitor monitor = new ExecutionPerformanceMonitor())
                 {
-                    //RunThreadTest();
-                    RunThreadPoolTest(splitRecords);
-                    Console.ReadKey();
+                    await RunThreadPoolTest(splitRecords);
                     Console.WriteLine($"{monitor.CreatePerformanceTimeMessage("Thread Runner")}");
                 }
             }
@@ -52,88 +46,39 @@ namespace ThreadedConsole
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
             }
 
-            Console.WriteLine("App Completed");
-        }
-
-        // void RunThreadTest()
-        // {
-        //     Thread th = Thread.CurrentThread;
-        //     th.Name = "MainThread";
-        //     Console.WriteLine("This is {0}", th.Name);
-        //     Console.ReadKey();
-        //     //
-        // }
-
-        static void RunThreadPoolTest(List<List<CSVRecord>> values)
-        {
-            Console.WriteLine($"RunThreadPoolTest with recordList {values.Count}");
-            ThreadPool.SetMinThreads(1, 1);
-            ThreadPool.SetMaxThreads(4, 4);
-            //int workers, ports;
-            // Get maximum number of threads  
-            //ThreadPool.GetMaxThreads(out workers, out ports);
-            //https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool.queueuserworkitem?view=net-5.0
-            //Console.WriteLine($"ThreadPool Test. Count {workers}");
-
-            for (int i = 0; i < values.Count; i++)
-            {
-                //Console.WriteLine($"size {values[i]} and position {i}");
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadProc), new object[] { values[i], i });
-                //Console.WriteLine("Main thread does some work, then sleeps.");
-            }
-        }
-
-        // This thread procedure performs the task.
-        static void ThreadProc(object package)
-        {
-            //Console.WriteLine($"ThreadProc");
-            var castedPackage = (object[])package;
-            int threadIndex = (int)castedPackage[1];
-            Console.WriteLine($"Starting Thread: {threadIndex}");
-            // No state object was passed to QueueUserWorkItem, so stateInfo is null.
-            var recorder = new RecordProcessor();
-            recorder.Execute((List<CSVRecord>)castedPackage[0], threadIndex);
-
-            //Console.WriteLine($"Completing Thread {threadIndex}");
+            Console.WriteLine("App Completed - Press Any Key to Finish");
+            Console.ReadKey();
         }
 
         /// <summary>
-        /// Query app settings json content
+        /// Supports thread pool execution for the configured data
         /// </summary>
+        /// <param name="values"></param>
         /// <returns></returns>
-        private static IConfigurationRoot LoadAppSettings()
+        static async Task<string> RunThreadPoolTest(List<List<CSVRecord>> values)
         {
-            try
+            //https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool.queueuserworkitem?view=net-5.0
+            //Wrapped in an await now but perhaps not required!
+            return await Task.Run(() =>
             {
-                var config = new ConfigurationBuilder()
-                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false, true)
-                .Build();
+                Console.WriteLine($"RunThreadPoolTest");
+                //initialise and the min and max thread pool count!
+                ThreadPool.SetMinThreads(1, 1);
+                ThreadPool.SetMaxThreads(4, 4);
+                //initialise a done event handler array set for controlling/delaying completion
+                var doneEvents = new ManualResetEvent[values.Count];
+                for (int i = 0; i < values.Count; i++)
+                {
+                    //set the done event, initialise the processor and work!
+                    doneEvents[i] = new ManualResetEvent(false);
+                    var f = new RecordProcessor(values[i], i, doneEvents[i]);
+                    ThreadPool.QueueUserWorkItem(f.ThreadPoolCallback, i);
+                }
 
-                return config;
-            }
-            catch (System.IO.FileNotFoundException)
-            {
-                Console.WriteLine("Error trying to load app settings");
-                return null;
-            }
+                //WaitHandler to block until all the work is done
+                WaitHandle.WaitAll(doneEvents);
+                return "Job Done";
+            });
         }
-
-        /// <summary>
-        /// Prep/Configure Dependency Injection
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="config"></param>
-        private static void RegisterAndInjectServices(IServiceCollection services, IConfiguration config)
-        {
-            // services.AddLogging(logging =>
-            // {
-            //     logging.AddConsole();
-            // }).Configure<LoggerFilterOptions>(options => options.MinLevel =
-            //                                     LogLevel.Warning);
-
-            services.AddTransient<RecordProcessor>();
-        }
-
     }
 }
