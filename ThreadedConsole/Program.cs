@@ -20,7 +20,8 @@ namespace ThreadedConsole
             Console.WriteLine("==========================");
 
             //Step1. open and process the file
-            string path = "/Users/Public/Downloads/mock_data.csv";
+            string path = "/Users/Public/Downloads/MOCK_DATA.csv";
+            //string path = "/Users/Public/Downloads/DPD17Aug2021-Short100.csv";
             List<CSVRecord> values = System.IO.File.ReadAllLines(path)
                                         .Skip(1)
                                         .Select(v => CSVRecord.FromCsv(v))
@@ -28,7 +29,7 @@ namespace ThreadedConsole
 
             Console.WriteLine("Loaded {0} records", values.Count);
 
-            var splitRecords = HelperMethods.SplitList(values, 500).ToList();
+            var splitRecords = HelperMethods.SplitList(values, 200).ToList();
 
             try
             {
@@ -73,7 +74,8 @@ namespace ThreadedConsole
                     //set the done event, initialise the processor and work!
                     doneEvents[i] = new ManualResetEvent(false);
                     var f = new RecordProcessor(values[i], i, doneEvents[i]);
-                    ThreadPool.QueueUserWorkItem(f.ThreadPoolCallback, i);
+                    // ThreadPool.QueueUserWorkItem(f.ThreadPoolCallback, i);
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(f.ThreadPoolCallback), i);
                 }
 
                 //WaitHandler to block until all the work is done

@@ -10,6 +10,7 @@ namespace ThreadedConsole.Models
     {
         public string OrderNumber { get; set; }
         public int TrackingNumber { get; set; }
+        public string Courier { get; set; } = "DPD";
         public string Email { get; set; }
         /// <summary>
         /// Booking reference for the customer
