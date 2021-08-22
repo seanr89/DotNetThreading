@@ -20,8 +20,8 @@ namespace ThreadedConsole
             Console.WriteLine("==========================");
 
             //Step1. open and process the file
-            string path = "/Users/Public/Downloads/MOCK_DATA.csv";
-            //string path = "/Users/Public/Downloads/DPD17Aug2021-Short100.csv";
+            //string path = "/Users/Public/Downloads/MOCK_DATA.csv";
+            string path = "/Users/Public/Downloads/DPD22Aug2021.csv";
             List<CSVRecord> values = System.IO.File.ReadAllLines(path)
                                         .Skip(1)
                                         .Select(v => CSVRecord.FromCsv(v))
@@ -29,7 +29,15 @@ namespace ThreadedConsole
 
             Console.WriteLine("Loaded {0} records", values.Count);
 
-            var splitRecords = HelperMethods.SplitList(values, 200).ToList();
+            var splitRecords = HelperMethods.SplitList(values, 1000).ToList();
+
+            Console.WriteLine($"Total number of splits: {splitRecords.Count}");
+            if (splitRecords.Count > 50)
+            {
+                Console.WriteLine("Split List is to big and needs to be trimmed!");
+                Environment.Exit(0);
+            }
+            Thread.Sleep(10000);
 
             try
             {
@@ -42,10 +50,12 @@ namespace ThreadedConsole
             catch (NotImplementedException e)
             {
                 Console.WriteLine($"Implementation Exception caught: {e.Message}");
+                Environment.Exit(1);
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Generic Exception caught: {e.Message}");
+                Environment.Exit(1);
             }
 
             Console.WriteLine("App Completed - Press Any Key to Finish");

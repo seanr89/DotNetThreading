@@ -29,6 +29,7 @@ namespace ThreadedConsole
         {
             //Request that the processor is executed and update the doneEvent once complete
             await this.Execute();
+            Console.WriteLine("Thread {0} complete", _threadNumber);
             _doneEvent.Set();
         }
 
@@ -68,22 +69,21 @@ namespace ThreadedConsole
             //Console.WriteLine($"SendDPDOrder : {record.Email}");
             try
             {
-                //Send email
+                //Send email with report to users.
                 var apiKey = "";
                 var client = new SendGridClient(apiKey);
-                var from = new EmailAddress("no-reply@abc.com", "ABC");
+                var from = new EmailAddress("", "");
                 var to = new EmailAddress(record.Email.Trim());
-                var subject = $"Sample Email";
+                var subject = $"Order Dispatch";
                 var plainTextContent = $@"Message:";
                 var htmlContent = "";
 
                 htmlContent = $@"<p>Dear Customer,</p>
-                            <p>Thank you for your order with User!</p>
 
                             <p>Please do not reply to this email</p>
 
                             <p>Kind regards,</p>
-                            <p><strong>ABC</strong></p>";
+                            <p><strong>Enter Name</strong></p>";
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
                 var response = await client.SendEmailAsync(msg);
