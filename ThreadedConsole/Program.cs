@@ -76,7 +76,7 @@ namespace ThreadedConsole
                 Console.WriteLine($"RunThreadPoolTest");
                 //initialise and the min and max thread pool count!
                 ThreadPool.SetMinThreads(1, 1);
-                ThreadPool.SetMaxThreads(4, 4);
+                ThreadPool.SetMaxThreads(4, 2);
                 //initialise a done event handler array set for controlling/delaying completion
                 var doneEvents = new ManualResetEvent[values.Count];
                 for (int i = 0; i < values.Count; i++)
@@ -84,7 +84,6 @@ namespace ThreadedConsole
                     //set the done event, initialise the processor and work!
                     doneEvents[i] = new ManualResetEvent(false);
                     var f = new RecordProcessor(values[i], i, doneEvents[i]);
-                    // ThreadPool.QueueUserWorkItem(f.ThreadPoolCallback, i);
                     ThreadPool.QueueUserWorkItem(new WaitCallback(f.ThreadPoolCallback), i);
                 }
 
