@@ -24,12 +24,22 @@ namespace ThreadedConsole.Models
         /// <returns>completed CSVRecord</returns>
         public static CSVRecord FromCsv(string csvLine)
         {
+
             string[] values = csvLine.Split(',');
             CSVRecord rec = new CSVRecord();
-            rec.OrderNumber = values[0];
-            rec.TrackingNumber = Convert.ToInt32(values[1]);
-            rec.Courier = values[2];
-            rec.Email = values[3];
+            try
+            {
+                rec.OrderNumber = values[0];
+                rec.TrackingNumber = Convert.ToInt32(values[1]);
+                rec.Courier = values[2];
+                rec.Email = values[3];
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine($"Format exception on line {csvLine}");
+                return null;
+                //throw e;
+            }
             return rec;
         }
     }

@@ -40,11 +40,11 @@ namespace ThreadedConsole
         private async Task Execute()
         {
             Console.WriteLine("Execute - Thread {0} started", _threadNumber);
-            // var rand = new Random();
-            // Thread.Sleep(rand.Next(1, 10) * 100);
 
             foreach (var record in _records)
             {
+                if (record == null)
+                    continue;
                 //Console.WriteLine("Process - Thread {0} - {1}", _threadNumber, record.Email);
                 if (record.Courier.Trim().ToUpper() == "DPD")
                 {
@@ -52,10 +52,6 @@ namespace ThreadedConsole
                     {
                         Console.WriteLine($"Failed DPD Email {record.Email}");
                     }
-                    // else
-                    // {
-                    //     Console.WriteLine($"Sent DPD Email {record.Email}");
-                    // }
                 }
                 else
                 {
@@ -66,24 +62,23 @@ namespace ThreadedConsole
 
         async Task<bool> SendDPDOrder(CSVRecord record)
         {
-            //Console.WriteLine($"SendDPDOrder : {record.Email}");
             try
             {
                 //Send email with report to users.
                 var apiKey = "";
                 var client = new SendGridClient(apiKey);
-                var from = new EmailAddress("", "");
+                var from = new EmailAddress("no-reply@.com", "");
                 var to = new EmailAddress(record.Email.Trim());
                 var subject = $"Order Dispatch";
                 var plainTextContent = $@"Message:";
                 var htmlContent = "";
 
                 htmlContent = $@"<p>Dear Customer,</p>
-
+                           
                             <p>Please do not reply to this email</p>
 
                             <p>Kind regards,</p>
-                            <p><strong>Enter Name</strong></p>";
+                            <p><strong>Randox Health</strong></p>";
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
                 var response = await client.SendEmailAsync(msg);

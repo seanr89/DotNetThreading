@@ -21,7 +21,7 @@ namespace ThreadedConsole
 
             //Step1. open and process the file
             //string path = "/Users/Public/Downloads/MOCK_DATA.csv";
-            string path = "/Users/Public/Downloads/DPD22Aug2021.csv";
+            string path = "/Users/Public/Downloads/.csv";
             List<CSVRecord> values = System.IO.File.ReadAllLines(path)
                                         .Skip(1)
                                         .Select(v => CSVRecord.FromCsv(v))
@@ -29,7 +29,7 @@ namespace ThreadedConsole
 
             Console.WriteLine("Loaded {0} records", values.Count);
 
-            var splitRecords = HelperMethods.SplitList(values, 1000).ToList();
+            var splitRecords = HelperMethods.SplitList(values, 420).ToList();
 
             Console.WriteLine($"Total number of splits: {splitRecords.Count}");
             if (splitRecords.Count > 50)
@@ -37,7 +37,7 @@ namespace ThreadedConsole
                 Console.WriteLine("Split List is to big and needs to be trimmed!");
                 Environment.Exit(0);
             }
-            Thread.Sleep(10000);
+            Thread.Sleep(5000);
 
             try
             {
