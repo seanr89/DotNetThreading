@@ -1,2 +1,17 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+namespace ParallelConsole;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // See https://aka.ms/new-console-template for more information
+        Console.WriteLine("Hello, World!");
+
+    }
+
+    private IHostBuilder CreateHostBuilder(string[] args)
+    {
+
+    }
+}
