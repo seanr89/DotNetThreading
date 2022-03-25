@@ -20,28 +20,26 @@ namespace ThreadedConsole
             Console.WriteLine("==========================");
 
             //Step1. open and process the file
-            //string path = "/Users/Public/Downloads/MOCK_DATA.csv";
-            string path = "/Users/Public/Downloads/DPD29Oct2021.csv";
+            //TODO: include an error check here for the files!
+            string path = "/Users/Public/Downloads/File.csv";
             List<CSVRecord> values = System.IO.File.ReadAllLines(path)
                                         .Skip(1)
                                         .Select(v => CSVRecord.FromCsv(v))
                                         .ToList();
 
-            var count = values.Count;
-            Console.WriteLine("Loaded {0} records", count);
+            Console.WriteLine("Loaded {0} records", values.Count);
 
-            var divisionSize = (int)count / 48;
+            var divisionSize = (int)values.Count / 48;
             Console.WriteLine($"Division size is {divisionSize}");
 
             var splitRecords = HelperMethods.SplitList(values, divisionSize).ToList();
 
-            Console.WriteLine($"Total number of splits: {splitRecords.Count}");
-            if (splitRecords.Count > 50)
-            {
-                Console.WriteLine("Split List is to big and needs to be trimmed!");
-                Environment.Exit(0);
-            }
-            //Thread.Sleep(2000);
+            // Console.WriteLine($"Total number of splits: {splitRecords.Count}");
+            // if (splitRecords.Count > 50)
+            // {
+            //     Console.WriteLine("Split List is to big and needs to be trimmed!");
+            //     Environment.Exit(0);
+            // }
 
             try
             {
@@ -74,13 +72,12 @@ namespace ThreadedConsole
         static async Task<string> RunThreadPoolTest(List<List<CSVRecord>> values)
         {
             //https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool.queueuserworkitem?view=net-5.0
-            //Wrapped in an await now but perhaps not required!
             return await Task.Run(() =>
             {
                 Console.WriteLine($"RunThreadPoolTest");
                 //initialise and the min and max thread pool count!
-                ThreadPool.SetMinThreads(1, 1);
-                ThreadPool.SetMaxThreads(4, 2);
+                // ThreadPool.SetMinThreads(1, 1);
+                // ThreadPool.SetMaxThreads(4, 2);
                 //initialise a done event handler array set for controlling/delaying completion
                 var doneEvents = new ManualResetEvent[values.Count];
                 for (int i = 0; i < values.Count; i++)
