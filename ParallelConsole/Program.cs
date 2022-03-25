@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace ParallelConsole;
 
 class Program
@@ -10,8 +12,8 @@ class Program
 
     }
 
-    private IHostBuilder CreateHostBuilder(string[] args)
-    {
+    // private IHostBuilder CreateHostBuilder(string[] args)
+    // {
 
-    }
+    // }
 }
