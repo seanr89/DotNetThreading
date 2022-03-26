@@ -13,8 +13,14 @@ class Program
         Console.WriteLine("Hello, World!");
 
         await RunAsyncParallelJob();
+
+        Console.WriteLine("App Complete");
     }
 
+    /// <summary>
+    /// Simple job to process the count
+    /// </summary>
+    /// <returns></returns>
     static async Task RunAsyncParallelJob()
     {
         var listData = createList(200);
