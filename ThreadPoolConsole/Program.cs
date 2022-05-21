@@ -1,4 +1,5 @@
-﻿
+﻿using System.Diagnostics;
+
 namespace ThreadPoolConsole
 {
     class Program
@@ -8,28 +9,10 @@ namespace ThreadPoolConsole
         {
             Console.WriteLine("Thread Pool Started");
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             int workers, ports;
-            ThreadPool.SetMaxThreads(1,2);
-            ThreadPool.SetMinThreads(1,1);
-  
-            // Get maximum number of threads  
-            ThreadPool.GetMaxThreads(out workers, out ports);  
-            // Console.WriteLine($"Maximum worker threads: {workers} ");  
-            // Console.WriteLine($"Maximum completion port threads: {ports}");  
-        
-            // Get available threads  
-            ThreadPool.GetAvailableThreads(out workers, out ports);  
-            // Console.WriteLine($"Available worker threads: {workers} ");  
-            // Console.WriteLine($"Available completion port threads: {ports}");  
-    
-            // Set minimum threads  
-            int minWorker, minIOC;  
-            ThreadPool.GetMinThreads(out minWorker, out minIOC);
-            ThreadPool.SetMinThreads(4, minIOC);  
-  
-            // Get total number of processes availalbe on the machine  
-            // int processCount = Environment.ProcessorCount;  
-            // Console.WriteLine($"No. of processes available on the system: {processCount}");  
     
             // Get minimum number of threads  
             ThreadPool.GetMinThreads(out workers, out ports);  
@@ -42,7 +25,7 @@ namespace ThreadPoolConsole
             {
                 Console.WriteLine($"Iteration: {i}");
                 ThreadPool.QueueUserWorkItem(Job);
-                Thread.Sleep(500);
+                Thread.Sleep(200);
             }
 
             static void Job(object state){
@@ -54,7 +37,9 @@ namespace ThreadPoolConsole
                 }
             }
 
-            Console.WriteLine("Steps complete");
+            sw.Stop();
+            Console.WriteLine($"Steps complete taking {sw.ElapsedMilliseconds}ms");
+            
             Console.ReadKey(); 
 
 
