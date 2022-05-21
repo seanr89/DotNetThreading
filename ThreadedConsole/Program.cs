@@ -34,13 +34,6 @@ namespace ThreadedConsole
 
             var splitRecords = HelperMethods.SplitList(values, divisionSize).ToList();
 
-            // Console.WriteLine($"Total number of splits: {splitRecords.Count}");
-            // if (splitRecords.Count > 50)
-            // {
-            //     Console.WriteLine("Split List is to big and needs to be trimmed!");
-            //     Environment.Exit(0);
-            // }
-
             try
             {
                 using (ExecutionPerformanceMonitor monitor = new ExecutionPerformanceMonitor())
@@ -71,13 +64,9 @@ namespace ThreadedConsole
         /// <returns></returns>
         static async Task<string> RunThreadPoolTest(List<List<CSVRecord>> values)
         {
-            //https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool.queueuserworkitem?view=net-5.0
             return await Task.Run(() =>
             {
-                Console.WriteLine($"RunThreadPoolTest");
-                //initialise and the min and max thread pool count!
-                // ThreadPool.SetMinThreads(1, 1);
-                // ThreadPool.SetMaxThreads(4, 2);
+                //Console.WriteLine($"RunThreadPoolTest");
                 //initialise a done event handler array set for controlling/delaying completion
                 var doneEvents = new ManualResetEvent[values.Count];
                 for (int i = 0; i < values.Count; i++)

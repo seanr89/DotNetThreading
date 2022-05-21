@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace Utilities
 {
     /// <summary>
-    /// Class to provide controls for event execution performance and time
+    /// Class to provide controls for event execution performance and time logging!
     /// </summary>
     public class ExecutionPerformanceMonitor : IDisposable
     {

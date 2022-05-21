@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Location to detail all basic and cross app functions
+    /// </summary>
     public static class HelperMethods
     {
         /// <summary>
