@@ -39,7 +39,7 @@ namespace ThreadedConsole
         /// </summary>
         private async Task Execute()
         {
-            Console.WriteLine("Execute - Thread {0} started", _threadNumber);
+            //Console.WriteLine("Execute - Thread {0} started", _threadNumber);
 
             foreach (var record in _records)
             {
@@ -64,31 +64,32 @@ namespace ThreadedConsole
         {
             try
             {
+                return true;
                 //Send email with report to users.
-                var apiKey = "";
-                var client = new SendGridClient(apiKey);
-                var from = new EmailAddress("no-reply@.com", "");
-                var to = new EmailAddress(record.Email.Trim());
-                var subject = $"Order Dispatch";
-                var plainTextContent = $@"Message:";
-                var htmlContent = "";
+                // var apiKey = "";
+                // var client = new SendGridClient(apiKey);
+                // var from = new EmailAddress("no-reply@.com", "");
+                // var to = new EmailAddress(record.Email.Trim());
+                // var subject = $"Order Dispatch";
+                // var plainTextContent = $@"Message:";
+                // var htmlContent = "";
 
-                htmlContent = $@"<p>Dear Customer,</p>
+                // htmlContent = $@"<p>Dear Customer,</p>
                            
-                            <p>Please do not reply to this email</p>
+                //             <p>Please do not reply to this email</p>
 
-                            <p>Kind regards,</p>
-                            <p><strong>Randox Health</strong></p>";
-                var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                //             <p>Kind regards,</p>
+                //             <p><strong>Randox Health</strong></p>";
+                // var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
-                var response = await client.SendEmailAsync(msg);
+                // var response = await client.SendEmailAsync(msg);
 
-                if (response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    return false;
-                }
+                // if (response.StatusCode == HttpStatusCode.BadRequest)
+                // {
+                //     return false;
+                // }
 
-                return (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted);
+                // return (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Accepted);
             }
             catch (Exception e)
             {

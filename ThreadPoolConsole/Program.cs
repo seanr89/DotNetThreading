@@ -31,10 +31,11 @@ namespace ThreadPoolConsole
             static void Job(object state){
                 for (int i = 0; i < 4; i++)
                 {
-                    Console.WriteLine("cycle {0}, is processing by thread {1}",
-                    i, Thread.CurrentThread.ManagedThreadId);
+                    // Console.WriteLine("cycle {0}, is processing by thread {1}",
+                    // i, Thread.CurrentThread.ManagedThreadId);
                     Thread.Sleep(350);
                 }
+                Console.WriteLine("Thread {0} is completed", Thread.CurrentThread.ManagedThreadId);
             }
 
             sw.Stop();
