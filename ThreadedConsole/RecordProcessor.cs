@@ -79,7 +79,7 @@ namespace ThreadedConsole
                 //             <p>Please do not reply to this email</p>
 
                 //             <p>Kind regards,</p>
-                //             <p><strong>Randox Health</strong></p>";
+                //             <p><strong></strong></p>";
                 // var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
                 // var response = await client.SendEmailAsync(msg);

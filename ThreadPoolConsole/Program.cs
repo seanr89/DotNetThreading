@@ -7,6 +7,7 @@ namespace ThreadPoolConsole
         //private static IConfigurationRoot Configuration { get; set; }
         async static Task Main(string[] args)
         {
+            Console.Clear();
             Console.WriteLine("Thread Pool Started");
 
             var sw = new Stopwatch();
@@ -17,7 +18,7 @@ namespace ThreadPoolConsole
             // Get minimum number of threads  
             ThreadPool.GetMinThreads(out workers, out ports);  
             Console.WriteLine($"Minimum worker threads: {workers} ");  
-            Console.WriteLine($"Minimum completion port threads: {ports}");  
+            //Console.WriteLine($"Minimum completion port threads: {ports}");  
   
             //Console.ReadKey();
             
@@ -35,7 +36,7 @@ namespace ThreadPoolConsole
                     // i, Thread.CurrentThread.ManagedThreadId);
                     Thread.Sleep(350);
                 }
-                Console.WriteLine("Thread {0} is completed", Thread.CurrentThread.ManagedThreadId);
+                //Console.WriteLine("Thread {0} is completed", Thread.CurrentThread.ManagedThreadId);
             }
 
             sw.Stop();

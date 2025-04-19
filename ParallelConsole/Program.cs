@@ -14,7 +14,7 @@ class Program
         Console.Clear();
         Console.WriteLine("Starting Parallel App");
 
-        var listData = createList(500);
+        var listData = createList(150);
 
         using (ExecutionPerformanceMonitor monitor = new ExecutionPerformanceMonitor())
         {
@@ -77,7 +77,7 @@ class Program
         int count = 0;
         var rdm = new Random();
         do{
-            int value = rdm.Next(20, 100);
+            int value = rdm.Next(25, 200);
             data.Add(new ($"item {count}", value));
             count++;
         }while(count < max);
